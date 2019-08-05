@@ -21,22 +21,65 @@ import java.util.*;
 public class AddNewsTest {
   private WebDriver driver;
   private Map<String, Object> vars;
-
+  //媒体ID，凤凰令牌
+  private Integer ids=756751;
+  //遍历次数
+  private int num=6;
   //媒体名称
-  private String[] mediaName={};
-  //媒体ID
-  private Integer ids=111;
-  //json
-  private String[] json={};
+  private String[] mediaName={
+          "淮北日报","淮北网","淮北新闻网",
+          "铜陵日报","铜陵新闻网","铜都晨刊"};
   //网站url
-  private String[] url={};
+  private String[] url={
+          "http://epaper.hbnews.net/epaper/hbrb/pc/layout/{year}{month2}/{day2}/node_A01.html",
+          "http://www.cnhbw.net",
+          "http://www.hbnews.net/",
+          //-----------------------------------
+          "http://www.tlnews.cn/dzb/tlrb/html/{year}-{month2}/{day2}/node_164.html",
+          "http://www.tlnews.cn/",
+          "http://www.tlnews.cn/dzb/tdck/html/{year}-{month2}/{day2}/node_327.html"
+  };
   //底页（详情页链接）提取规则
-  private String[] detailLinkRule={};
+  private String[] detailLinkRule={
+          "http://epaper.hbnews.net/epaper/hbrb/pc/layout/{year}{month2}/{day2}/node_A\\d+.html@http://epaper.hbnews.net/epaper/hbrb/pc/content/{year}{month2}/{day2}/content_\\d+.html",
+          "http://www.cnhbw.net/{year}/{month2}{day2}/\\d+.shtml",
+          "http://www.hbnews.net/\\w+/\\w+.*.shtml",
+          //-----------------------------------
+          "http://www.tlnews.cn/dzb/tlrb/html/{year}-{month2}/{day2}/node_\\d+.html@http://www.tlnews.cn/dzb/tlrb/html/{year}-{month2}/{day2}/content_\\d+.html\\?div=\\d+",
+          "http://www.tlnews.cn/.*{year}-{month2}/{day2}/content_\\d+.htm",
+          "http://www.tlnews.cn/dzb/tdck/html/{year}-{month2}/{day2}/node_\\d+.html@http://www.tlnews.cn/dzb/tdck/html/{year}-{month2}/{day2}/content_\\d+.html?div=-1"
+  };
   //详情页标题提取规则
-  private String[] titleRule={};
+  private String[] titleRule={
+          "#Title",
+          ".inner > h1",
+          ".inner > h1",
+          //-----------------------------------
+          "tr:nth-child(1) > td:nth-child(2) > table:nth-child(3) > tbody > tr > td > strong",
+          "#spm_title",
+          "tr:nth-child(1) > td:nth-child(2) > table:nth-child(3) > tbody > tr > td > strong"
+  };
+  //author
+  private String[] authors={
+          "#ozoom > founder-content > p:nth-child(1)",
+          ".article-content.fontSizeSmall.BSHARE_POP > p:nth-child(23)",
+          ".article-content.fontSizeSmall.BSHARE_POP > div",
+          //-----------------------------------
+          "",
+          "",
+          ""
+  };
   //详情页内容提取规则
-  private String[] contentRule={};
-  //
+  private String[] contentRule={
+          "#ozoom",
+          ".article-content.fontSizeSmall.BSHARE_POP",
+          ".article-content.fontSizeSmall.BSHARE_POP",
+          //-----------------------------------
+          "#ozoom",
+          "#spm_content",
+          "#ozoom"
+  };
+
 
   JavascriptExecutor js;
   @Before
@@ -54,7 +97,7 @@ public class AddNewsTest {
     // 抓站管理的网页
     driver.get("http://pmop.staff.ifeng.com/Cmpp/develop/index.jhtml?nodeId=12006");
     //凤凰令牌
-    driver.findElement(By.id("txtVerifyCode")).sendKeys("196006");
+    driver.findElement(By.id("txtVerifyCode")).sendKeys(ids.toString());
     // 点击确定按钮
     driver.findElement(By.xpath("//*[@id='x-form-el-txtVerifyCode']/span/button")).click();//*[@id="x-form-el-txtVerifyCode"]/span
 
@@ -78,91 +121,85 @@ public class AddNewsTest {
     // 点击增加按钮
     driver.findElement(By.id("ext-gen141")).click();
     Thread.sleep(1000);
-    for (int i=0;i<5;i++){
-    // 选择增加页面的frame
-    driver.switchTo().defaultContent();
-    driver.switchTo().frame("centerTabPanel__tab_list_add_23133_15414");
 
-    // TextField_2 |媒体名称| 安徽商报 |
-    //mediaName[]
-    driver.findElement(By.id("TextField_2")).click();
-    driver.findElement(By.id("TextField_2")).sendKeys("安徽商报");
+    for (int i=0;i<num;i++){
+      // 选择增加页面的frame
+      driver.switchTo().defaultContent();
+      driver.switchTo().frame("centerTabPanel__tab_list_add_23133_15414");
 
-    //TextField_39 | 媒体id| 初始值10002 |
-    driver.findElement(By.id("TextField_39")).click();
-    ids++;
-    String id=ids.toString();
-    driver.findElement(By.id("TextField_39")).sendKeys(id);
+      // TextField_2 |媒体名称| 安徽商报 |
+      driver.findElement(By.id("TextField_2")).click();
+      driver.findElement(By.id("TextField_2")).sendKeys(mediaName[i]);
 
-    // ComboBox_45 | 类别 | //*[@id="ext-gen6"]
-    driver.findElement(By.id("ComboBox_45")).click();//*[@id='x-form-el-txtVerifyCode']/span/button
-    // ext-gen479 | 稿源 | 这个js动态生成只能定位到具体标签//*[@id="ext-gen6"]/div[3]/div[1]/div[3]
-    driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[3]/div[1]/div[3]")).click();
+      //TextField_39 | 媒体id| 初始值10005 |
+      driver.findElement(By.id("TextField_39")).click();
+      driver.findElement(By.id("TextField_39")).sendKeys(ids.toString());
+      ids++;
 
-    // TextField_42 | 配置json | {"id":"10002","name":"安徽商报"}
-    //json[]
-    driver.findElement(By.id("TextField_42")).click();
-    driver.findElement(By.id("TextField_42")).sendKeys("{\"id\":\"10002\",\"name\":\"安徽商报\"}");
+      // ComboBox_45 | 类别 | //*[@id="ext-gen6"]
+      driver.findElement(By.id("ComboBox_45")).click();//*[@id='x-form-el-txtVerifyCode']/span/button
+      // ext-gen479 | 稿源 | 这个js动态生成只能定位到具体标签//*[@id="ext-gen6"]/div[3]/div[1]/div[3]
+      driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[3]/div[1]/div[3]")).click();
 
-    // 同步地址 | 稿源 | 这个js动态生成只能定位到具体标签//*[@id="CheckboxGroup_37"]
-    driver.findElement(By.xpath("//*[@id=\"x-form-el-CheckboxGroup_37\"]/span/span/input")).click();
+      // 同步地址 | 稿源 | 这个js动态生成只能定位到具体标签//*[@id="CheckboxGroup_37"]
+      driver.findElement(By.xpath("//*[@id=\"x-form-el-CheckboxGroup_37\"]/span/span/input")).click();
 
-    // TextField_3 | 抓取地址 | 爬取的网站{year}{month2}/{day2}
-    //url[]
-    driver.findElement(By.id("TextField_3")).click();
-    driver.findElement(By.id("TextField_3")).sendKeys("http://epaper.anhuinews.com/html/ahsb.shtml");
+      // TextField_3 | 抓取地址 | 爬取的网站{year}{month2}/{day2}
+      driver.findElement(By.id("TextField_3")).click();
+      driver.findElement(By.id("TextField_3")).sendKeys(url[i]);
 
-    // ComboBox_25 | 抓取周期
-    driver.findElement(By.id("ComboBox_25")).click();
-    // 30min | 这个js动态生成id只能定位到具体标签//*[@id="ext-gen6"]/div[3]
-    driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[4]/div[1]/div[3]")).click();
+      // ComboBox_25 | 抓取周期
+      driver.findElement(By.id("ComboBox_25")).click();
+      // 30min | 这个js动态生成id只能定位到具体标签//*[@id="ext-gen6"]/div[3]
+      driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[4]/div[1]/div[3]")).click();
 
-    // ComboBox_5 | 状态
-    driver.findElement(By.id("ComboBox_5")).click();
-    // 上线不同步 | 这个js动态生成id只能定位到具体标签
+      // ComboBox_5 | 状态
+      driver.findElement(By.id("ComboBox_5")).click();
+      // 上线不同步 | 这个js动态生成id只能定位到具体标签
+      driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[5]/div[1]/div[8]")).click();
 
-    driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[5]/div[1]/div[8]")).click();
+      // ComboBox_4 | 首页解析方式
+      driver.findElement(By.id("ComboBox_4")).click();
+      // html | 这个js动态生成id只能定位到具体标签
+      driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[6]/div[1]/div[1]")).click();
 
-    // ComboBox_4 | 首页解析方式
-    driver.findElement(By.id("ComboBox_4")).click();
-    // html | 这个js动态生成id只能定位到具体标签
-    driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[6]/div[1]/div[1]")).click();
+      // ComboBox_7 | 底页解析方式
+      driver.findElement(By.id("ComboBox_7")).click();
+      // css | 这个js动态生成id只能定位到具体标签
+      driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[7]/div[1]/div[2]")).click();
 
-    // ComboBox_7 | 底页解析方式
-    driver.findElement(By.id("ComboBox_7")).click();
-    // css | 这个js动态生成id只能定位到具体标签
-    driver.findElement(By.xpath("//*[@id=\"ext-gen6\"]/div[7]/div[1]/div[2]")).click();
+      // TextField_8 | 底页(详情页链接)提取规则:
+      // detailLinkRule[]
+      driver.findElement(By.id("TextField_8")).click();
+      driver.findElement(By.id("TextField_8")).sendKeys(detailLinkRule[i]);
 
-    // TextField_8 | 底页(详情页链接)提取规则:
-    // detailLinkRule[]
-    driver.findElement(By.id("TextField_8")).click();
-    driver.findElement(By.id("TextField_8")).sendKeys("http://news.yznews.com.cn.*/content_\\d+.htm");
+      // TextField_12 | 详情页标题规则
+      driver.findElement(By.id("TextField_12")).click();
+      driver.findElement(By.id("TextField_12")).sendKeys(titleRule[i]);
 
-    // TextField_12 | 详情页标题规则
-    // titleRule[i]
-    driver.findElement(By.id("TextField_12")).click();
-    driver.findElement(By.id("TextField_12")).sendKeys(".paper_nr.zww > h1");
+      // TextField_14 | 详情页日期提取
+      driver.findElement(By.id("TextField_14")).click();
+      driver.findElement(By.id("TextField_14")).sendKeys("auto");
 
-    // TextField_14 | 详情页日期提取
-    driver.findElement(By.id("TextField_14")).click();
-    driver.findElement(By.id("TextField_14")).sendKeys("auto");
+      // TextField_15 | 抓取几日内
+      driver.findElement(By.id("TextField_15")).click();
+      driver.findElement(By.id("TextField_15")).sendKeys("2");
 
-    // TextField_15 | 抓取几日内
-    driver.findElement(By.id("TextField_15")).click();
-    driver.findElement(By.id("TextField_15")).sendKeys("2");
+      // TextField_16 | 详情页来源规则
+      driver.findElement(By.id("TextField_16")).click();
+      driver.findElement(By.id("TextField_16")).sendKeys("auto");
 
-    // TextField_16 | 详情页来源规则
-    driver.findElement(By.id("TextField_16")).click();
-    driver.findElement(By.id("TextField_16")).sendKeys("auto");
+      // TextField_16 | 详情页来源规则
+      driver.findElement(By.id("TextField_22")).click();
+      driver.findElement(By.id("TextField_22")).sendKeys(authors[i]);
 
-    //TextField_23 | 详情页内容规则
-    driver.findElement(By.id("TextField_23")).click();
-    driver.findElement(By.id("TextField_23")).sendKeys(".paper_nr.zww > div");
+      //TextField_23 | 详情页内容规则
+      driver.findElement(By.id("TextField_23")).click();
+      driver.findElement(By.id("TextField_23")).sendKeys(contentRule[i]);
 
-    //TextField_23 | 详情页内容规则
-    driver.findElement(By.xpath("//*[@id=\"btn_b_saveAndAdd\"]/tbody/tr/td[2]")).click();
-    Thread.sleep(2000);
-
-   }
+      //点击保存
+      driver.findElement(By.xpath("//*[@id=\"btn_b_saveAndAdd\"]/tbody/tr/td[2]")).click();
+      Thread.sleep(2000);
+    }
   }
 }
