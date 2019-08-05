@@ -16,10 +16,11 @@ public class WechatEntering {
   JavascriptExecutor js;
   //微信名称
   String[] names={
-          "合肥地铁报","新安晚报","安徽日报"
+          "合肥地铁报","新安晚报","安徽日报",
   };
   //微信号
-  String[] ids={"hefeidtb","xawbxawb","anhuidaily"
+  String[] ids={
+          "hefeidtb","xawbxawb","anhuidaily",
   };
   private int num=1;
 
@@ -115,11 +116,11 @@ public class WechatEntering {
 
       //  click | 媒体名称 | 微信名称 |
       driver.findElement(By.id("nickName")).click();
-      driver.findElement(By.id("nickName")).sendKeys(names[0]);
+      driver.findElement(By.id("nickName")).sendKeys(names[i]);
 
       //click | 用户id | 微信号 |
       driver.findElement(By.id("userId")).click();
-      driver.findElement(By.id("userId")).sendKeys(ids[0]);
+      driver.findElement(By.id("userId")).sendKeys(ids[i]);
 
       //click | 提交 |  |
       driver.findElement(By.id("ensure")).click();
