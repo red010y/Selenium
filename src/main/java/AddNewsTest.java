@@ -22,62 +22,206 @@ public class AddNewsTest {
   private WebDriver driver;
   private Map<String, Object> vars;
   //媒体ID，凤凰令牌
-  private Integer ids=756751;
+  private Integer ids=503862;
   //遍历次数
-  private int num=6;
+  private int num=14;
   //媒体名称
   private String[] mediaName={
-          "淮北日报","淮北网","淮北新闻网",
-          "铜陵日报","铜陵新闻网","铜都晨刊"};
+//
+//          //-----------------------------------
+//           "内江新闻网", "乐山日报",
+//          //-----------------------------------
+//          "三江都市报", "乐山新闻网", "资阳日报",
+//          //-----------------------------------
+//          "资阳网", "宜宾日报", "宜宾晚报",
+//          //-----------------------------------
+//          "金江网", "宜宾新闻网", "南充日报", "南充新闻网",
+//  //-----------------------------------
+            "南充晚报","达州日报","达州日报网",
+    //-----------------------------------
+            "达州晚报","雅安日报","大雅网",
+    //-----------------------------------
+            "北纬网","广安日报","广安在线",
+    //-----------------------------------
+            "广安新闻网",
+    //-----------------------------------
+            "巴中传媒网","眉山日报","眉山网","东坡文化网"
+
+  };
   //网站url
   private String[] url={
-          "http://epaper.hbnews.net/epaper/hbrb/pc/layout/{year}{month2}/{day2}/node_A01.html",
-          "http://www.cnhbw.net",
-          "http://www.hbnews.net/",
+/*                  "http://www.scnjnews.com/",
+                  "http://www.cnepaper.com/lsrb/html/{year}-{month2}/{day2}/node_1.htm",
           //-----------------------------------
-          "http://www.tlnews.cn/dzb/tlrb/html/{year}-{month2}/{day2}/node_164.html",
-          "http://www.tlnews.cn/",
-          "http://www.tlnews.cn/dzb/tdck/html/{year}-{month2}/{day2}/node_327.html"
+                  "http://www.cnepaper.com/sjdsb/html/{year}-{month2}/{day2}/node_1.htm",
+                  "http://www.leshan.cn/",
+                  "http://paper.zyrb.com.cn/html/http://ncwb.cnncw.cn/shtml/ncwb/20190809/index.shtml/node_1.htm",
+          //-----------------------------------
+                  "http://www.zyrb.com.cn/",
+                  "http://np.jj831.com/html/{year}-{month2}/{day2}/node_2.htm",
+                  "http://epaper.ybwb.cn/",
+          //-----------------------------------
+                  "http://www.jj831.com/",
+                  "http://www.ybxww.com/",
+                  "http://ncrb.cnncw.cn/index.shtml",
+                  "http://www.cnncw.cn",*/
+          //-----------------------------------
+                  "http://ncwb.cnncw.cn/shtml/ncwb/{year}{month2}{day2}/index.shtml",
+                  "http://www.dzrbs.com/dzrbspage/dzrb/html/{year}-{month2}/{day2}/node_3.htm",
+                  "http://www.dzrbs.com/",
+          //-----------------------------------
+                  "http://www.dzrbs.com/dzrbspage/dzwb/html/{year}-{month2}/{day2}/node_19.htm",
+                  "http://epaper.beiww.com/yarb/pc/navigation_005001001/{year}/{month2}/{day2}/001.html",
+                  "http://www.dayaw.cn/",
+          //-----------------------------------
+                  "http://www.beiww.com/",
+                  "http://szb.gazx.org/pc/column/201902/26/node_01.html",
+                  "http://www.gazx.org/",
+          //-----------------------------------
+                  "http://www.gatv.com.cn/",
+//                  "/",
+//                  "/",
+          //-----------------------------------
+                  "http://www.bznews.org/",
+                  "http://szb.mshw.net/html/2019-08/26/node_2.htm",
+                  "http://www.mshw.net/",
+          //-----------------------------------
+                  "http://www.dpwhw.net/"
+          //-----------------------------------
+
   };
   //底页（详情页链接）提取规则
   private String[] detailLinkRule={
-          "http://epaper.hbnews.net/epaper/hbrb/pc/layout/{year}{month2}/{day2}/node_A\\d+.html@http://epaper.hbnews.net/epaper/hbrb/pc/content/{year}{month2}/{day2}/content_\\d+.html",
-          "http://www.cnhbw.net/{year}/{month2}{day2}/\\d+.shtml",
-          "http://www.hbnews.net/\\w+/\\w+.*.shtml",
+//          "http://ncwb.cnncw.cn/shtml/ncwb/{year}{month2}{day2}/v\\w*.shtml@http://ncwb.cnncw.cn/shtml/ncwb/{year}{month2}{day2}/\\d+.shtml",
+//          "http://www.dzrbs.com/dzrbspage/dzrb/html/{year}-{month2}/{day2}/node_\\d+.htm@http://www.dzrbs.com/dzrbspage/dzrb/html/{year}-{month2}/{day2}/content_\\d+.htm",
+//          "http://www.dzrbs.com/html/{year}-{month2}/{day2}/content_\\d+.html",
+//          //-----------------------------------
+//          "http://www.dzrbs.com/dzrbspage/dzwb/html/{year}-{month2}/{day2}/node_\\d+.htm@http://www.dzrbs.com/dzrbspage/dzwb/html/{year}-{month2}/{day2}/content_\\d+.htm",
+//          "http://epaper.beiww.com/yarb/pc/navigation_005001001/{year}/{month2}/{day2}/\\d+.html@http://epaper.beiww.com/yarb/pc/navigation_005001001/{year}/{month2}/{day2}/\\d+/\\d+.html",
+//          "http://www.dayaw.cn/news/\\w+/{year}/{month2}{day2}/\\d+.html",
+//          //-----------------------------------
+//          "http://zyrb.com.cn/{year}/{month2}{day2}/\\d+.shtml",
+//          "http://np.jj831.com/html/{year}-{month2}/{day2}/node_\\d+.htm@http://np.jj831.com/html/{year}-{month2}/{day2}/content_\\d+.htm",
+//          "http://epaper.ybwb.cn/content/{year}-{month2}/{day2}/\\w*@http://epaper.ybwb.cn/content/{year}-{month2}/{day2}/\\d+.html",
+//          //-----------------------------------
+//          "http://www.jj831.com/{year}/{month2}{day2}/\\d+.shtml",
+//          "http://www.ybxww.com/\\w*/html/{year}{month2}/\\d+.shtml",
+//          "http://ncrb.cnncw.cn/shtml/ncrb/{year}{month2}{day2}/vA\\d+.shtml",
+//          "http://www.cnncw.cn/{year}/{month2}{day2}/\\d+.shtml",
+
+
+
+          "http://ncwb.cnncw.cn/shtml/ncwb/{year}{month2}{day2}/v\\w+.shtml@http://ncwb.cnncw.cn/shtml/ncwb/{year}{month2}{day2}/\\d+.shtml",
+          "http://www.dzrbs.com/dzrbspage/dzrb/html/{year}-{month2}/{day2}/node_\\d+.htm@http://www.dzrbs.com/dzrbspage/dzrb/html/{year}-{month2}/{day2}/content_\\d+.htm",
+          "http://www.dzrbs.com/html/{year}-{month2}/{day2}/content_\\d+.html",
           //-----------------------------------
-          "http://www.tlnews.cn/dzb/tlrb/html/{year}-{month2}/{day2}/node_\\d+.html@http://www.tlnews.cn/dzb/tlrb/html/{year}-{month2}/{day2}/content_\\d+.html\\?div=\\d+",
-          "http://www.tlnews.cn/.*{year}-{month2}/{day2}/content_\\d+.htm",
-          "http://www.tlnews.cn/dzb/tdck/html/{year}-{month2}/{day2}/node_\\d+.html@http://www.tlnews.cn/dzb/tdck/html/{year}-{month2}/{day2}/content_\\d+.html?div=-1"
+          "http://www.dzrbs.com/dzrbspage/dzwb/html/{year}-{month2}/{day2}/node_\\d+.htm@http://www.dzrbs.com/dzrbspage/dzwb/html/{year}-{month2}/{day2}/content_\\d+.htm",
+          "http://epaper.beiww.com/yarb/pc/navigation_005001001/{year}/{month2}/{day2}/\\d+.html@http://epaper.beiww.com/yarb/pc/navigation_005001001/{year}/{month2}/{day2}/\\d+/\\d+.html",
+          "http://www.dayaw.cn/news/\\w*/{year}/{month2}{day2}/\\d+.html",
+          //-----------------------------------
+          "http://news.beiww.com/yayw1763/{year}{month2}/t{year}{month2}{day2}_\\d+.html",
+          "http://szb.gazx.org/pc/column/{year}{month2}/{day2}/node_\\d+.html@http://szb.gazx.org/pc/content/{year}{month2}/{day2}/content_\\d+.html",
+          "http://www.gazx.org/content/{year}-{month2}/{day2}/content_\\d+.html",
+          //-----------------------------------
+          "http://www.gatv.com.cn/1/\\d+_1.shtml",
+//          "",
+//          "",
+
+          //-----------------------------------
+          "http://www.bznews.org/news/\\w*/{year}{month2}/\\d+.html",
+          "http://szb.mshw.net/html/{year}-{month2}/{day2}/node_\\d+.htm@http://szb.mshw.net/html/{year}-{month2}/{day2}/content_\\d+.htm",
+          "http://www.mshw.net/xwzx/\\w*/{year}{month2}/t{year}{month2}{day2}_\\d+.html",
+          "http://dpwh.mshw.net/\\w*/{year}{month2}/t{year}{month2}{day2}_\\d+.html",
+
+
+
   };
   //详情页标题提取规则
   private String[] titleRule={
+//          "#content > h1",
+//          ".font01",
+//          "#content_head > h1",
+//          //-----------------------------------
+//          ".font01",
+//          ".detail-title-box > h3",
+//          ".article-body > h1",
+//          //-----------------------------------
+//          "#c1",
+//          ".font01",
+//          ".newsdetail_bg.clearfix > h1",
+//          //-----------------------------------
+//          ".text-center",
+//          ".h-title",
+//          "#content > h5:nth-child(5)",
+//          ".column.article-content.js-returntop.pos-r > h1",
+
+
+
+          "#content > h1",
+          ".font01",
+          "#content_head > h1",
+          //-----------------------------------
+          ".font01",
+          ".detail-title-box > h3",
+          ".article-body > h1",
+          //-----------------------------------
+          ".ya-xl-top > h1",
           "#Title",
-          ".inner > h1",
-          ".inner > h1",
+          ".content_tit",
           //-----------------------------------
-          "tr:nth-child(1) > td:nth-child(2) > table:nth-child(3) > tbody > tr > td > strong",
-          "#spm_title",
-          "tr:nth-child(1) > td:nth-child(2) > table:nth-child(3) > tbody > tr > td > strong"
-  };
-  //author
-  private String[] authors={
-          "#ozoom > founder-content > p:nth-child(1)",
-          ".article-content.fontSizeSmall.BSHARE_POP > p:nth-child(23)",
-          ".article-content.fontSizeSmall.BSHARE_POP > div",
+          ".page > div.left.cont > h1",
+//          "",
+//          "",
           //-----------------------------------
-          "",
-          "",
-          ""
+          "#titleContent",
+          ".title1",
+          ".vvmi-left-ti.lf > h1",
+          ".dp-atr > p:nth-child(1)",
+
   };
+//  //author
+//  private String[] authors={
+//          "",
+//          "",
+//          "#content_head > div > div:nth-child(5) > span",
+//          //-----------------------------------
+//          "",
+//          "",
+//          ".user",
+//          //-----------------------------------
+//          "#b1 > div:nth-child(8) > p",
+//          "",
+//          "",
+//          //-----------------------------------
+//          ".article-info > span:nth-child(2)",
+//          ".zuozhe",
+//          "",
+//          "",
+//
+//  };
   //详情页内容提取规则
   private String[] contentRule={
+          "#content_div",
           "#ozoom",
-          ".article-content.fontSizeSmall.BSHARE_POP",
-          ".article-content.fontSizeSmall.BSHARE_POP",
+          "#endtext",
           //-----------------------------------
           "#ozoom",
-          "#spm_content",
-          "#ozoom"
+          "#DETAIL_CONTENT > div",
+          "#article-content",
+          //-----------------------------------
+          ".clearfix > div.ya-xl-con",
+          "#ozoom",
+          ".c_left.fl.mr30 > div.con_detail",
+          //-----------------------------------
+          ".left.cont > div.content",
+//          "",
+//          "",
+          //-----------------------------------
+          "#tLWPage_content_left > div.cotentBox",
+          ".content_right",
+          "#font",
+          ".dp-atr > div.dp-atr-content",
+
   };
 
 
@@ -189,9 +333,9 @@ public class AddNewsTest {
       driver.findElement(By.id("TextField_16")).click();
       driver.findElement(By.id("TextField_16")).sendKeys("auto");
 
-      // TextField_16 | 详情页来源规则
-      driver.findElement(By.id("TextField_22")).click();
-      driver.findElement(By.id("TextField_22")).sendKeys(authors[i]);
+//      // TextField_16 | 详情页来源规则
+//      driver.findElement(By.id("TextField_22")).click();
+//      driver.findElement(By.id("TextField_22")).sendKeys(authors[i]);
 
       //TextField_23 | 详情页内容规则
       driver.findElement(By.id("TextField_23")).click();
